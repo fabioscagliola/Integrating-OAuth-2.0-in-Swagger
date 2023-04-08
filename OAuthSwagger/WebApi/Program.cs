@@ -1,8 +1,11 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using System.Security.Claims;
 
 namespace com.fabioscagliola.OAuthSwagger.WebApi;
 
@@ -10,6 +13,8 @@ public class Program
 {
     static void Main(string[] args)
     {
+        //const string CorsPolicyName = "AllowAnyHeader_AllowAnyMethod_AllowAnyOrigin";
+
         string[] scopes = { "offline_access", "openid", "profile", };
 
         WebApplicationBuilder webApplicationBuilder = WebApplication.CreateBuilder(args);
@@ -18,9 +23,20 @@ public class Program
 
         webApplicationBuilder.Services.AddControllers();
         webApplicationBuilder.Services.AddEndpointsApiExplorer();
-        webApplicationBuilder.Services.AddMicrosoftIdentityWebAppAuthentication(webApplicationBuilder.Configuration, Constants.AzureAdB2C);
+        //webApplicationBuilder.Services.AddMicrosoftIdentityWebAppAuthentication(webApplicationBuilder.Configuration, Constants.AzureAdB2C);
         //webApplicationBuilder.Services.AddOptions();
-        webApplicationBuilder.Services.Configure<OpenIdConnectOptions>(azureAdB2CConfig);
+        //webApplicationBuilder.Services.Configure<OpenIdConnectOptions>(azureAdB2CConfig);
+
+        webApplicationBuilder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddMicrosoftIdentityWebApi(
+            jwtBearerOptions =>
+            {
+                jwtBearerOptions.TokenValidationParameters.NameClaimType = ClaimTypes.Name;
+                webApplicationBuilder.Configuration.Bind(Constants.AzureAdB2C, jwtBearerOptions);
+            },
+            microsoftIdentityOptions =>
+            {
+                webApplicationBuilder.Configuration.Bind(Constants.AzureAdB2C, microsoftIdentityOptions);
+            });
 
         webApplicationBuilder.Services.AddDbContext<WebApiDbContext>(optionsAction =>
         {
@@ -56,6 +72,16 @@ public class Program
                 });
         });
 
+        //webApplicationBuilder.Services.AddCors(setupAction =>
+        //{
+        //    setupAction.AddPolicy(CorsPolicyName, configPolicy =>
+        //    {
+        //        configPolicy.AllowAnyHeader();
+        //        configPolicy.AllowAnyMethod();
+        //        configPolicy.AllowAnyOrigin();
+        //    });
+        //});
+
         WebApplication webApplication = webApplicationBuilder.Build();
 
         if (webApplication.Environment.IsDevelopment())
@@ -72,7 +98,7 @@ public class Program
 
         webApplication.UseAuthentication();
         webApplication.UseAuthorization();
-
+        //webApplication.UseCors(CorsPolicyName);
         webApplication.UseHttpsRedirection();
 
         webApplication.MapControllers();

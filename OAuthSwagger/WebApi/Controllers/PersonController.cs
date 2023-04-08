@@ -25,6 +25,7 @@ public class PersonController : ControllerBase
     [Route("[action]")]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(Person))]
     [SwaggerResponse(StatusCodes.Status400BadRequest)]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Create(PersonCreateData personCreateData)
     {
         Person person = new() { FName = personCreateData.FName, LName = personCreateData.LName, };
@@ -44,6 +45,7 @@ public class PersonController : ControllerBase
     [Route("[action]/{id}")]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(Person))]
     [SwaggerResponse(StatusCodes.Status400BadRequest)]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Read(int id)
     {
         Person? person = await dbContext.People.SingleOrDefaultAsync(x => x.Id == id);
@@ -58,6 +60,7 @@ public class PersonController : ControllerBase
     [HttpGet]
     [Route("[action]")]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<Person>))]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> ReadList()
     {
         List<Person> people = await dbContext.People.ToListAsync();
@@ -71,6 +74,7 @@ public class PersonController : ControllerBase
     [Route("[action]")]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(Person))]
     [SwaggerResponse(StatusCodes.Status400BadRequest)]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Update(Person person)
     {
         Person? existing = await dbContext.People.SingleOrDefaultAsync(x => x.Id == person.Id);
@@ -93,6 +97,7 @@ public class PersonController : ControllerBase
     [Route("[action]/{id}")]
     [SwaggerResponse(StatusCodes.Status200OK)]
     [SwaggerResponse(StatusCodes.Status400BadRequest)]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Delete(int id)
     {
         Person? person = await dbContext.People.SingleOrDefaultAsync(x => x.Id == id);
