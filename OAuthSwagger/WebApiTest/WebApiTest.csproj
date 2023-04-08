@@ -4,7 +4,7 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<RootNamespace>com.fabioscagliola.IntegrationTesting.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+		<RootNamespace>com.fabioscagliola.OAuthSwagger.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);1591</NoWarn>
 		<Title>ASP.NET Core Integration Testing</Title>
@@ -30,6 +30,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="FluentAssertions" Version="6.10.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.4" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.4">
 			<PrivateAssets>all</PrivateAssets>

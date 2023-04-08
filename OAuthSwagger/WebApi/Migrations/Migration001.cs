@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace com.fabioscagliola.IntegrationTesting.WebApi.Migrations
+namespace com.fabioscagliola.OAuthSwagger.WebApi.Migrations
 {
     /// <inheritdoc />
     public partial class Migration001 : Migration

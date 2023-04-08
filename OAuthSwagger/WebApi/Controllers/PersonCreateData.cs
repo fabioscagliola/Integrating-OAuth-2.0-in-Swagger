@@ -1,6 +1,6 @@
 ﻿#nullable disable
 
-namespace com.fabioscagliola.IntegrationTesting.WebApi.Controllers;
+namespace com.fabioscagliola.OAuthSwagger.WebApi.Controllers;
 
 public class PersonCreateData
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace com.fabioscagliola.IntegrationTesting.WebApi;
+namespace com.fabioscagliola.OAuthSwagger.WebApi;
 
 public class WebApiDbContext : DbContext
 {

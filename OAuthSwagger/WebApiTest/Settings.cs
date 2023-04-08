@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace com.fabioscagliola.IntegrationTesting.WebApiTest;
+namespace com.fabioscagliola.OAuthSwagger.WebApiTest;
 
 class Settings
 {

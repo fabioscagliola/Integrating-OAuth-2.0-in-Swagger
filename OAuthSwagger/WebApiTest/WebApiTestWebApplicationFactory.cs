@@ -1,4 +1,4 @@
-﻿using com.fabioscagliola.IntegrationTesting.WebApi;
+﻿using com.fabioscagliola.OAuthSwagger.WebApi;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Data.Common;
 
-namespace com.fabioscagliola.IntegrationTesting.WebApiTest;
+namespace com.fabioscagliola.OAuthSwagger.WebApiTest;
 
 public class WebApiTestWebApplicationFactory<T> : WebApplicationFactory<T> where T : class
 {

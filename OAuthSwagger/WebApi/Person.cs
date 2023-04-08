@@ -1,6 +1,6 @@
 ﻿#nullable disable
 
-namespace com.fabioscagliola.IntegrationTesting.WebApi;
+namespace com.fabioscagliola.OAuthSwagger.WebApi;
 
 public class Person
 {

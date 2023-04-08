@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace com.fabioscagliola.IntegrationTesting.WebApi.Properties {
+namespace com.fabioscagliola.OAuthSwagger.WebApi.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace com.fabioscagliola.IntegrationTesting.WebApi.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("com.fabioscagliola.IntegrationTesting.WebApi.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("com.fabioscagliola.OAuthSwagger.WebApi.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

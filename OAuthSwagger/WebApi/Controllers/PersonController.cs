@@ -1,11 +1,13 @@
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace com.fabioscagliola.IntegrationTesting.WebApi.Controllers;
+namespace com.fabioscagliola.OAuthSwagger.WebApi.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 public class PersonController : ControllerBase
 {

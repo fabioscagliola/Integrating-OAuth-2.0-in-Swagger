@@ -1,8 +1,8 @@
-﻿using com.fabioscagliola.IntegrationTesting.WebApi;
+﻿using com.fabioscagliola.OAuthSwagger.WebApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace com.fabioscagliola.IntegrationTesting.WebApiTest;
+namespace com.fabioscagliola.OAuthSwagger.WebApiTest;
 
 public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<WebApiDbContext>
 {
