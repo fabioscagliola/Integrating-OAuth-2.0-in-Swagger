@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -13,35 +11,48 @@ public class Program
 {
     static void Main(string[] args)
     {
-        //const string CorsPolicyName = "AllowAnyHeader_AllowAnyMethod_AllowAnyOrigin";
-
         string[] scopes = { "offline_access", "openid", "profile", };
 
         WebApplicationBuilder webApplicationBuilder = WebApplication.CreateBuilder(args);
 
         IConfiguration azureAdB2CConfig = webApplicationBuilder.Configuration.GetSection(Constants.AzureAdB2C);
 
-        webApplicationBuilder.Services.AddControllers();
-        webApplicationBuilder.Services.AddEndpointsApiExplorer();
-        //webApplicationBuilder.Services.AddMicrosoftIdentityWebAppAuthentication(webApplicationBuilder.Configuration, Constants.AzureAdB2C);
-        //webApplicationBuilder.Services.AddOptions();
-        //webApplicationBuilder.Services.Configure<OpenIdConnectOptions>(azureAdB2CConfig);
-
         webApplicationBuilder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddMicrosoftIdentityWebApi(
             jwtBearerOptions =>
             {
-                jwtBearerOptions.TokenValidationParameters.NameClaimType = ClaimTypes.Name;
                 webApplicationBuilder.Configuration.Bind(Constants.AzureAdB2C, jwtBearerOptions);
+
+                jwtBearerOptions.Events = new JwtBearerEvents()
+                {
+                    OnMessageReceived = messageReceivedContext =>
+                    {
+                        string accessToken = messageReceivedContext.Request.Query["access_token"]!;
+
+                        if (!string.IsNullOrEmpty(accessToken))
+                        {
+                            messageReceivedContext.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    },
+                };
+
+                jwtBearerOptions.TokenValidationParameters.NameClaimType = ClaimTypes.Name;
             },
             microsoftIdentityOptions =>
             {
                 webApplicationBuilder.Configuration.Bind(Constants.AzureAdB2C, microsoftIdentityOptions);
-            });
+            }
+        );
+
+        webApplicationBuilder.Services.AddControllers();
 
         webApplicationBuilder.Services.AddDbContext<WebApiDbContext>(optionsAction =>
         {
             optionsAction.UseSqlServer(webApplicationBuilder.Configuration.GetConnectionString("ConnectionString"));
         });
+
+        webApplicationBuilder.Services.AddEndpointsApiExplorer();
 
         webApplicationBuilder.Services.AddSwaggerGen(setupAction =>
         {
@@ -50,14 +61,17 @@ public class Program
 
             const string OAUTH2 = "oauth2";
 
+            string baseUrl = $"{azureAdB2CConfig.GetValue<string>("Instance")}/{azureAdB2CConfig.GetValue<string>("Domain")}/{azureAdB2CConfig.GetValue<string>("SignUpSignInPolicyId")}/oauth2/v2.0";
+
             setupAction.AddSecurityDefinition(OAUTH2, new OpenApiSecurityScheme()
             {
                 Flows = new()
                 {
                     AuthorizationCode = new()
                     {
-                        AuthorizationUrl = new($"{azureAdB2CConfig.GetValue<string>("Instance")}/{azureAdB2CConfig.GetValue<string>("Domain")}/{azureAdB2CConfig.GetValue<string>("SignUpSignInPolicyId")}/oauth2/v2.0/authorize"),
-                        TokenUrl = new($"{azureAdB2CConfig.GetValue<string>("Instance")}/{azureAdB2CConfig.GetValue<string>("Domain")}/{azureAdB2CConfig.GetValue<string>("SignUpSignInPolicyId")}/oauth2/v2.0/token"),
+                        AuthorizationUrl = new($"{baseUrl}/authorize"),
+                        TokenUrl = new($"{baseUrl}/token"),
+                        Scopes = scopes.ToDictionary(key => key, value => string.Empty),
                     },
                 },
                 Type = SecuritySchemeType.OAuth2,
@@ -71,16 +85,6 @@ public class Program
                     },
                 });
         });
-
-        //webApplicationBuilder.Services.AddCors(setupAction =>
-        //{
-        //    setupAction.AddPolicy(CorsPolicyName, configPolicy =>
-        //    {
-        //        configPolicy.AllowAnyHeader();
-        //        configPolicy.AllowAnyMethod();
-        //        configPolicy.AllowAnyOrigin();
-        //    });
-        //});
 
         WebApplication webApplication = webApplicationBuilder.Build();
 
@@ -98,7 +102,6 @@ public class Program
 
         webApplication.UseAuthentication();
         webApplication.UseAuthorization();
-        //webApplication.UseCors(CorsPolicyName);
         webApplication.UseHttpsRedirection();
 
         webApplication.MapControllers();
