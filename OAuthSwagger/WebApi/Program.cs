@@ -26,7 +26,7 @@ public class Program
                 {
                     OnMessageReceived = messageReceivedContext =>
                     {
-                        string accessToken = messageReceivedContext.Request.Query["access_token"]!;
+                        string accessToken = messageReceivedContext.Request.Headers["access_token"]!;
 
                         if (!string.IsNullOrEmpty(accessToken))
                         {
@@ -38,6 +38,8 @@ public class Program
                 };
 
                 jwtBearerOptions.TokenValidationParameters.NameClaimType = ClaimTypes.Name;
+
+                jwtBearerOptions.IncludeErrorDetails = true;
             },
             microsoftIdentityOptions =>
             {

@@ -7,29 +7,26 @@
 		<RootNamespace>com.fabioscagliola.OAuthSwagger.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);1591</NoWarn>
-		<Title>ASP.NET Core Integration Testing</Title>
+		<Title>Integrating OAuth 2.0 in Swagger</Title>
 		<Authors>Fabio Scagliola</Authors>
-		<Copyright>Fabio Scagliola 2022</Copyright>
-		<Product>ASP.NET Core Integration Testing</Product>
-		<Description>This solution demonstrates how to implement integration testing of an ASP.NET Core web API that uses EF Core and Migrations with Microsoft SQL Server, mocking the database context in order to use an SQLite in-memory database.</Description>
+		<Copyright>Fabio Scagliola 2023</Copyright>
+		<Product>Integrating OAuth 2.0 in Swagger</Product>
+		<Description>This solution demonstrates how to integrate OAuth 2.0 in Swagger in order to try out your web API methods using Swagger seamlessly authenticating with the OAuth 2.0 identity provider that protects them.</Description>
 		<AssemblyVersion>1.0</AssemblyVersion>
 		<FileVersion>$(AssemblyVersion)</FileVersion>
 		<Version>$(AssemblyVersion)</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="AzureAdB2C.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="FluentValidation" Version="11.5.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.5" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.5" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.5">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Identity.Web" Version="2.10.0" />
+		<PackageReference Include="Microsoft.Identity.Web" Version="2.11.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
 	</ItemGroup>
