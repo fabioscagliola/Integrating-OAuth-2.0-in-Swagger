@@ -2,34 +2,33 @@
 
 #nullable disable
 
-namespace com.fabioscagliola.OAuthSwagger.WebApiTest.Migrations
+namespace com.fabioscagliola.OAuthSwagger.WebApiTest.Migrations;
+
+/// <inheritdoc />
+public partial class Migration001 : Migration
 {
     /// <inheritdoc />
-    public partial class Migration001 : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.CreateTable(
-                name: "Person",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    FName = table.Column<string>(type: "TEXT", nullable: false),
-                    LName = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Person", x => x.Id);
-                });
-        }
+        migrationBuilder.CreateTable(
+            name: "Person",
+            columns: table => new
+            {
+                Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    .Annotation("Sqlite:Autoincrement", true),
+                FName = table.Column<string>(type: "TEXT", nullable: false),
+                LName = table.Column<string>(type: "TEXT", nullable: false)
+            },
+            constraints: table =>
+            {
+                table.PrimaryKey("PK_Person", x => x.Id);
+            });
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "Person");
-        }
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropTable(
+            name: "Person");
     }
 }
