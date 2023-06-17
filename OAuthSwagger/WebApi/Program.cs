@@ -11,7 +11,7 @@ public class Program
 {
     static void Main(string[] args)
     {
-        string[] scopes = { "offline_access", "openid", "profile", };
+        string[] scopes = { "offline_access", "openid", };
 
         WebApplicationBuilder webApplicationBuilder = WebApplication.CreateBuilder(args);
 
@@ -21,25 +21,7 @@ public class Program
             jwtBearerOptions =>
             {
                 webApplicationBuilder.Configuration.Bind(Constants.AzureAdB2C, jwtBearerOptions);
-
-                jwtBearerOptions.Events = new JwtBearerEvents()
-                {
-                    OnMessageReceived = messageReceivedContext =>
-                    {
-                        string accessToken = messageReceivedContext.Request.Headers["access_token"]!;
-
-                        if (!string.IsNullOrEmpty(accessToken))
-                        {
-                            messageReceivedContext.Token = accessToken;
-                        }
-
-                        return Task.CompletedTask;
-                    },
-                };
-
                 jwtBearerOptions.TokenValidationParameters.NameClaimType = ClaimTypes.Name;
-
-                jwtBearerOptions.IncludeErrorDetails = true;
             },
             microsoftIdentityOptions =>
             {
