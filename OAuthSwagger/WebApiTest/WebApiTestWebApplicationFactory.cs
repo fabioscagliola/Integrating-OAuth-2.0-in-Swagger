@@ -1,6 +1,8 @@
 ﻿using com.fabioscagliola.OAuthSwagger.WebApi;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,5 +36,17 @@ public class WebApiTestWebApplicationFactory<T> : WebApplicationFactory<T> where
             WebApiDbContext webApiDbContext = serviceScope.ServiceProvider.GetRequiredService<WebApiDbContext>();
             webApiDbContext.Database.EnsureCreated();
         });
+    }
+
+    public HttpClient CreateClientWithAuthentication()
+    {
+        return WithWebHostBuilder(config =>
+        {
+            config.ConfigureTestServices(servicesConfig =>
+            {
+                servicesConfig.AddAuthentication(WebApiTestAuthenticationHandler.AuthenticationScheme)
+                    .AddScheme<AuthenticationSchemeOptions, WebApiTestAuthenticationHandler>(WebApiTestAuthenticationHandler.AuthenticationScheme, configureOptions => { });
+            });
+        }).CreateClient();
     }
 }

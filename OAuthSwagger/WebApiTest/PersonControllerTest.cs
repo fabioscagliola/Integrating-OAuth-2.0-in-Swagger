@@ -27,7 +27,7 @@ public class PersonControllerTest : BaseTest
     public async Task GivenFNameOrLNameAreNullOrEmpty_WhenCreatingPerson_ThenReturnsBadRequest(string fName, string lName)
     {
         PersonCreateData personCreateData = new() { FName = fName, LName = lName };
-        HttpResponseMessage httpResponseMessage = await httpClient.PostAsync($"{Settings.Instance.WebApiUrl}/Person/Create", JsonContent.Create(personCreateData));
+        HttpResponseMessage httpResponseMessage = await webApiTestWebApplicationFactory.CreateClientWithAuthentication().PostAsync($"{Settings.Instance.WebApiUrl}/Person/Create", JsonContent.Create(personCreateData));
         httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         string fNameOrLNameAreNullOrEmpty = await httpResponseMessage.Content.ReadAsStringAsync();
         fNameOrLNameAreNullOrEmpty.Should().NotBeNull();
@@ -47,7 +47,7 @@ public class PersonControllerTest : BaseTest
     [Test]
     public async Task GivenNonExistingId_WhenReadingPerson_ThenReturnsBadRequest()
     {
-        HttpResponseMessage httpResponseMessage = await httpClient.GetAsync($"{Settings.Instance.WebApiUrl}/Person/Read/0");
+        HttpResponseMessage httpResponseMessage = await webApiTestWebApplicationFactory.CreateClientWithAuthentication().GetAsync($"{Settings.Instance.WebApiUrl}/Person/Read/0");
         httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         string notfound = await httpResponseMessage.Content.ReadAsStringAsync();
         notfound.Should().NotBeNull();
@@ -60,7 +60,7 @@ public class PersonControllerTest : BaseTest
         Person expected = await CreatePerson(FNAME, LNAME);
         expected.Should().NotBeNull();
 
-        HttpResponseMessage httpResponseMessage = await httpClient.GetAsync($"{Settings.Instance.WebApiUrl}/Person/Read/{expected.Id}");
+        HttpResponseMessage httpResponseMessage = await webApiTestWebApplicationFactory.CreateClientWithAuthentication().GetAsync($"{Settings.Instance.WebApiUrl}/Person/Read/{expected.Id}");
         httpResponseMessage.EnsureSuccessStatusCode();
         Person actual = await httpResponseMessage.Content.ReadFromJsonAsync(typeof(Person)) as Person;
         MakeAssertions(expected, actual);
@@ -72,7 +72,7 @@ public class PersonControllerTest : BaseTest
         Person expected = await CreatePerson(FNAME, LNAME);
         expected.Should().NotBeNull();
 
-        HttpResponseMessage httpResponseMessage = await httpClient.GetAsync($"{Settings.Instance.WebApiUrl}/Person/ReadList");
+        HttpResponseMessage httpResponseMessage = await webApiTestWebApplicationFactory.CreateClientWithAuthentication().GetAsync($"{Settings.Instance.WebApiUrl}/Person/ReadList");
         httpResponseMessage.EnsureSuccessStatusCode();
         List<Person> people = await httpResponseMessage.Content.ReadFromJsonAsync(typeof(List<Person>)) as List<Person>;
         people.Should().NotBeNull();
@@ -85,7 +85,7 @@ public class PersonControllerTest : BaseTest
     public async Task GivenNonExistingPerson_WhenUpdatingPerson_ThenReturnsBadRequest()
     {
         Person expected = new();
-        HttpResponseMessage httpResponseMessage = await httpClient.PostAsync($"{Settings.Instance.WebApiUrl}/Person/Update", JsonContent.Create(expected));
+        HttpResponseMessage httpResponseMessage = await webApiTestWebApplicationFactory.CreateClientWithAuthentication().PostAsync($"{Settings.Instance.WebApiUrl}/Person/Update", JsonContent.Create(expected));
         httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         string notfound = await httpResponseMessage.Content.ReadAsStringAsync();
         notfound.Should().NotBeNull();
@@ -108,7 +108,7 @@ public class PersonControllerTest : BaseTest
         temp.Should().NotBeNull();
 
         Person expected = new() { Id = temp.Id, FName = fName, LName = lName };
-        HttpResponseMessage httpResponseMessage = await httpClient.PostAsync($"{Settings.Instance.WebApiUrl}/Person/Update", JsonContent.Create(expected));
+        HttpResponseMessage httpResponseMessage = await webApiTestWebApplicationFactory.CreateClientWithAuthentication().PostAsync($"{Settings.Instance.WebApiUrl}/Person/Update", JsonContent.Create(expected));
         httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         string fNameOrLNameAreNullOrEmpty = await httpResponseMessage.Content.ReadAsStringAsync();
         fNameOrLNameAreNullOrEmpty.Should().NotBeNull();
@@ -122,7 +122,7 @@ public class PersonControllerTest : BaseTest
         temp.Should().NotBeNull();
 
         Person expected = new() { Id = temp.Id, FName = "Laura", LName = "Bernasconi" };
-        HttpResponseMessage httpResponseMessage = await httpClient.PostAsync($"{Settings.Instance.WebApiUrl}/Person/Update", JsonContent.Create(expected));
+        HttpResponseMessage httpResponseMessage = await webApiTestWebApplicationFactory.CreateClientWithAuthentication().PostAsync($"{Settings.Instance.WebApiUrl}/Person/Update", JsonContent.Create(expected));
         httpResponseMessage.EnsureSuccessStatusCode();
         Person actual = await httpResponseMessage.Content.ReadFromJsonAsync(typeof(Person)) as Person;
         MakeAssertions(expected, actual);
@@ -131,7 +131,7 @@ public class PersonControllerTest : BaseTest
     [Test]
     public async Task GivenNonExistingId_WhenDeletingPerson_ThenReturnsBadRequest()
     {
-        HttpResponseMessage httpResponseMessage = await httpClient.DeleteAsync($"{Settings.Instance.WebApiUrl}/Person/Delete/0");
+        HttpResponseMessage httpResponseMessage = await webApiTestWebApplicationFactory.CreateClientWithAuthentication().DeleteAsync($"{Settings.Instance.WebApiUrl}/Person/Delete/0");
         httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         string notfound = await httpResponseMessage.Content.ReadAsStringAsync();
         notfound.Should().NotBeNull();
@@ -145,12 +145,12 @@ public class PersonControllerTest : BaseTest
 
         {
             expected.Should().NotBeNull();
-            HttpResponseMessage httpResponseMessage = await httpClient.DeleteAsync($"{Settings.Instance.WebApiUrl}/Person/Delete/{expected.Id}");
+            HttpResponseMessage httpResponseMessage = await webApiTestWebApplicationFactory.CreateClientWithAuthentication().DeleteAsync($"{Settings.Instance.WebApiUrl}/Person/Delete/{expected.Id}");
             httpResponseMessage.EnsureSuccessStatusCode();
         }
 
         {
-            HttpResponseMessage httpResponseMessage = await httpClient.GetAsync($"{Settings.Instance.WebApiUrl}/Person/Read/{expected.Id}");
+            HttpResponseMessage httpResponseMessage = await webApiTestWebApplicationFactory.CreateClientWithAuthentication().GetAsync($"{Settings.Instance.WebApiUrl}/Person/Read/{expected.Id}");
             httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             string notfound = await httpResponseMessage.Content.ReadAsStringAsync();
             notfound.Should().NotBeNull();
@@ -161,7 +161,7 @@ public class PersonControllerTest : BaseTest
     async Task<Person> CreatePerson(string fName, string lName)
     {
         PersonCreateData personCreateData = new() { FName = fName, LName = lName };
-        HttpResponseMessage httpResponseMessage = await httpClient.PostAsync($"{Settings.Instance.WebApiUrl}/Person/Create", JsonContent.Create(personCreateData));
+        HttpResponseMessage httpResponseMessage = await webApiTestWebApplicationFactory.CreateClientWithAuthentication().PostAsync($"{Settings.Instance.WebApiUrl}/Person/Create", JsonContent.Create(personCreateData));
         httpResponseMessage.EnsureSuccessStatusCode();
         return await httpResponseMessage.Content.ReadFromJsonAsync(typeof(Person)) as Person;
     }

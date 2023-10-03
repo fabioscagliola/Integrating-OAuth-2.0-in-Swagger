@@ -8,17 +8,14 @@ namespace com.fabioscagliola.OAuthSwagger.WebApiTest;
 
 public class WebApiTestAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-    public static string AuthenticationScheme { get { return "TestScheme"; } }
+    public static string AuthenticationScheme { get { return "Test"; } }
 
-    public WebApiTestAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
-        : base(options, logger, encoder, clock)
-    {
-    }
+    public WebApiTestAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock) { }
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        Claim[] claims = new[] { new Claim(ClaimTypes.Name, "Fabio"), };
-        ClaimsIdentity claimsIdentity = new(claims, AuthenticationScheme);
+        Claim[] claims = new[] { new Claim(ClaimTypes.Name, "Fabio Scagliola"), };
+        ClaimsIdentity claimsIdentity = new(claims, "Test");
         ClaimsPrincipal claimsPrincipal = new(claimsIdentity);
         AuthenticationTicket authenticationTicket = new(claimsPrincipal, AuthenticationScheme);
         AuthenticateResult authenticateResult = AuthenticateResult.Success(authenticationTicket);
